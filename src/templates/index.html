@@ -3,6 +3,20 @@
 <html>
 <body>
 	<h1>{{title}} is working</h1>
+	{% for obj in object_list %}
+
+/posts/id {{obj.id}}
+{% url "posts:detail" id=obj.id %}
+<a href='{{ obj.get_absolute_url }}'>	{{obj.title}}  </a> </br>
+	{{obj.timestamp}}</br>
+	{{obj.updated}}</br>
+	{{obj.content}}</br>
+	{{obj.id}}</br>
+	{{obj.pk}}</br></br>
+
+	{% endfor%}
+
+
 </body>	
 
 

@@ -1,0 +1,6 @@
+<h1>{{ post.content }}</h1>
+<ul>
+{% for comment in post.commment_set.all %}
+    <li>{{ comment.comment_text }}</li>
+{% endfor %}
+</ul>

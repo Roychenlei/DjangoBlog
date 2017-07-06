@@ -1,0 +1,9 @@
+{% if latest_list %}
+	<ul>
+		{% for post in latest_list %}
+			<li><a href="{% url 'posts:detail' post.id %}">{{ post.content }}</a></li>
+		{% endfor %}
+	</ul>
+{% else %}
+		<<p>No posts are available.</p>>
+{% endif %}

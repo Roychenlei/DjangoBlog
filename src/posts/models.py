@@ -11,6 +11,15 @@ from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from django.conf import settings
 
+from django.utils import timezone 
+
+
+
+
+class PostManager(models.Manager):
+	def active(self,*args,**kwargs):
+		return super(PostManager,self).filter(draft=False).filter(publish__lte=timezone.now())
+
 
 def upload_location(instance,filename):
 	return "%s/%s" % (instance.id,filename)
@@ -35,6 +44,8 @@ class Post(models.Model):
 	draft = models.BooleanField(default=False)
 	publish = models.DateField(auto_now=False,auto_now_add=False)
 
+
+	objects = PostManager()
 
 
 	def __unicode__(self):

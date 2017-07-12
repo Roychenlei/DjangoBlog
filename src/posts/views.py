@@ -6,7 +6,9 @@ from .models  import Post
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from .forms import PostForm
 from django.contrib import messages
+from django.utils import timezone
 
+from django.db.models import Q
 
 def post_create(request):
 	if not request.user.is_staff or not request.user.is_superuser:
@@ -38,6 +40,10 @@ def post_detail(request,slug=None): #retrieve
 
 	instance = get_object_or_404(Post,slug=slug)
 
+	if instance.publish > timezone.now().date() or instance.draft:
+		if not request.user.is_staff or not request.user.is_superuser:
+			raise Http404
+
 	context = {
 		"title": instance.title,
 		"instance":instance,
@@ -49,7 +55,22 @@ def post_detail(request,slug=None): #retrieve
 
 def post_list(request): #list items
 
-	queryset_list = Post.objects.all() #.order_by("-timestamp")
+	# queryset_list = Post.objects.all() #.order_by("-timestamp")
+	today =timezone.now().date()
+	queryset_list = Post.objects.active()
+	if request.user.is_staff or request.user.is_superuser:
+		queryset_list = Post.objects.all()
+
+	query = request.GET.get("q")
+	if query:
+		queryset_list = queryset_list.filter(
+						Q(title__icontains=query)|
+						Q(content__icontains=query)|
+						Q(user__first_name__icontains=query)|
+						Q(user__last_name__icontains=query)
+						).distinct()
+
+
 
 	paginator = Paginator(queryset_list, 5) # Show 25 contacts per page
 
@@ -68,7 +89,8 @@ def post_list(request): #list items
 	context={
 			"object_list": queryset,
 			"title":"List",
-			"page_request_var":page_request_var
+			"page_request_var":page_request_var,
+			"today":today,
 		}
 
 

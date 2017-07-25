@@ -9,7 +9,7 @@ Step by step to a set a Django Blog:
 	$ pip install django==1.11
 
 3, init project ,set a superuser,migrate:
-	$ django-admin.py create trydjango
+	$ django-admin.py create blog
 	$ python manage.py createsuperuser
 	
 

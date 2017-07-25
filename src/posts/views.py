@@ -16,8 +16,8 @@ def post_create(request):
 	form = PostForm(request.POST or None,request.FILES or None)
 	if form.is_valid():
 		instance=form.save(commit=False)
-		print (form.cleaned_data.get("title"))
-		print (form.cleaned_data.get("content"))
+		# print (form.cleaned_data.get("title"))
+		# print (form.cleaned_data.get("content"))
 
 		instance.save()
 		messages.success(request, "Successfully Created")
@@ -88,7 +88,7 @@ def post_list(request): #list items
 
 	context={
 			"object_list": queryset,
-			"title":"List",
+			"title":"Person Blog ",
 			"page_request_var":page_request_var,
 			"today":today,
 		}
